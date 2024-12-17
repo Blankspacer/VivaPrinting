@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Cart</title>
+    <style>
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            text-align: center;
+        }
+        .cart {
+            margin-top: 20px;
+            border-top: 2px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Products</h1>
+    <div class="products">
+        <div class="product" data-name="Product 1" data-price="10">
+            <img src="https://via.placeholder.com/150" alt="Product 1">
+            <h3>Product 1</h3>
+            <p>Price: $10</p>
+            <input type="number" min="1" value="1" class="quantity">
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="product" data-name="Product 2" data-price="20">
+            <img src="https://via.placeholder.com/150" alt="Product 2">
+            <h3>Product 2</h3>
+            <p>Price: $20</p>
+            <input type="number" min="1" value="1" class="quantity">
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <h2>Cart</h2>
+    <div class="cart">
+        <ul id="cart-items"></ul>
+        <p><strong>Total:</strong> $<span id="cart-total">0</span></p>
+    </div>
+
+    <script>
+        const cart = [];
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.parentElement;
+                const productName = product.getAttribute('data-name');
+                const productPrice = parseFloat(product.getAttribute('data-price'));
+                const productQuantity = parseInt(product.querySelector('.quantity').value);
+
+                const productInCart = cart.find(item => item.name === productName);
+
+                if (productInCart) {
+                    productInCart.quantity += productQuantity;
+                    productInCart.totalPrice += productQuantity * productPrice;
+                } else {
+                    cart.push({
+                        name: productName,
+                        image: product.querySelector('img').src,
+                        price: productPrice,
+                        quantity: productQuantity,
+                        totalPrice: productQuantity * productPrice
+                    });
+                }
+
+                updateCart();
+            });
+        });
+
+        function updateCart() {
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" style="width: 50px; vertical-align: middle;">
+                    <strong>${item.name}</strong> - 
+                    ${item.quantity} x $${item.price} = $${item.totalPrice.toFixed(2)}
+                `;
+                cartItems.appendChild(li);
+                total += item.totalPrice;
+            });
+
+            cartTotal.textContent = total.toFixed(2);
+        }
+    </script>
+</body>
+</html>

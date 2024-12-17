@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Order Page</title>
+    <link rel="stylesheet" href="cartstles.css">
+
+</head>
+<body>
+	  
+    <div class="container">
+		<img src="dummy/logo.png"  class="img-fuild" alt="Viva Printing Pack">
+							  <h1><font color="#EC1D20"> Choose your Desired products from our Product list </font></h1>
+		====================================================================
+        <div id="productList"></div>
+        <button id="viewCartButton" onclick="viewCart()">View Cart</button>
+
+        <!-- Cart Modal -->
+        <div id="cartModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCart()">&times;</span>
+                <h2>Your Cart</h2>
+                <div id="cartItems"></div>
+                <h3 id="cartTotal">Total: $0</h3>
+                <button id="checkoutButton" onclick="checkout">Checkout</button>
+						
+            </div>
+        </div>
+    </div>
+
+    <script src="cartscript.js"></script>
+</body>
+</html>

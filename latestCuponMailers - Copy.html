@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertising Esentials</title>
+    <style>
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 800px;
+            text-align: center;
+        }
+        .cart {
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+        }
+        .checkout-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .checkout-form input {
+            margin: 5px 0;
+            display: block;
+        }
+        .success-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 align="center">Advertising Essentials</h1>
+    <div class="products">
+        <div class="product" data-name="Cupon Mailers"  data-price="30.47">
+            
+           
+			<p align="justify">In the world of advertising essentials, leveraging marketing essentials and promotion signage is crucial. Marketers aim to captivate existing customers and even reach a new target audience through a variety of tools, such as brochures, catalogs and postcards. Each element, from concise rack cards to memorable event tickets, plays an important role in communicating effectively and achieving marketing objectives. Carefully select materials to align with your campaigns, enhance your brand's impact and create lasting success.</p>
+			
+				<img src="dummy/Band Name/advertising essentials/Backlit Menu.jpg" height="200" width="200" alt="menu"><p>Menu</p>
+			
+			<img src="dummy/Band Name/booklets/image.jpg" height="200" width="200" alt="Cupon Mailers"><p>Hard Cover</p>
+			<img src="dummy/Band Name/booklets/images.jpg" height="200" width="200" alt="Cupon Mailers"><p>Catalogs</p><br>
+			<img src="dummy/Band Name/booklets/paperback_books_sample.jpg" height="200" width="200" alt="Cupon Mailers"><p>Paper back Books sample</p><br>
+			<img  src="dummy/Band Name/booklets/perfect_bound_sample.jpg" height="200" width="200" alt="Cupon Mailers"><br>
+			
+			<img src="dummy/Band Name/booklets/saddle_stitch_booklets_sample.jpg" height="200" width="200" alt="Cupon Mailers"><p>Perfect Bound</p><br>
+			
+			
+			<img src="dummy/Band Name/booklets/saddle_stitch_booklets_sample.jpg"height="200" width="200" alt="Cupon Mailers"><p>Saddl Stich</p><br>
+			
+<br>
+				<p> If you need any cusomized design please contact us : info@vivasmartprinting.com</p>
+
+            <p><font style="bold">Unit Price: $30.47</font></p>
+            <input type="number" min="200" value="1" class="quantity">
+			
+            <button class="add-to-cart">Add to Cart</button>
+      </div>
+        
+    </div>
+
+    <h2>Cart</h2>
+    <div class="cart">
+        <ul id="cart-items"></ul>
+        <p><strong>Total:</strong> $<span id="cart-total">0</span></p>
+        <button id="checkout-button">Checkout</button>
+    </div>
+
+    <div class="checkout-form">
+        <h2>Checkout</h2>
+        <form id="checkout-form">
+            <input type="text" id="customer-name" placeholder="Your Name" required>
+            <input type="text" id="customer-address" placeholder="Your Address" required>
+            <input type="tel" id="customer-phone" placeholder="Your Phone Number" required>
+            <input type="email" id="customer-email" placeholder="Your Email" required>
+            <button type="submit" id="confirm-checkout">Confirm Checkout</button>
+        </form>
+    </div>
+
+    <p class="success-message" id="success-message">Thanks for your order. We will get back to you soon.</p>
+
+    <script>
+        const cart = [];
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutButton = document.getElementById('checkout-button');
+        const checkoutForm = document.querySelector('.checkout-form');
+        const successMessage = document.getElementById('success-message');
+        const checkoutFormElement = document.getElementById('checkout-form');
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.parentElement;
+                const productName = product.getAttribute('data-name');
+                const productPrice = parseFloat(product.getAttribute('data-price'));
+                const productQuantity = parseInt(product.querySelector('.quantity').value);
+
+                const productInCart = cart.find(item => item.name === productName);
+
+                if (productInCart) {
+                    productInCart.quantity += productQuantity;
+                    productInCart.totalPrice += productQuantity * productPrice;
+                } else {
+                    cart.push({
+                        name: productName,
+                        image: product.querySelector('img').src,
+                        price: productPrice,
+                        quantity: productQuantity,
+                        totalPrice: productQuantity * productPrice
+                    });
+                }
+
+                updateCart();
+            });
+        });
+
+        function updateCart() {
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" style="width: 50px; vertical-align: middle;">
+                    <strong>${item.name}</strong> - 
+                    ${item.quantity} x $${item.price} = $${item.totalPrice.toFixed(2)}
+                `;
+                cartItems.appendChild(li);
+                total += item.totalPrice;
+            });
+
+            cartTotal.textContent = total.toFixed(2);
+        }
+
+        checkoutButton.addEventListener('click', () => {
+            checkoutForm.style.display = 'block';
+        });
+
+        checkoutFormElement.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('customer-name').value;
+            const address = document.getElementById('customer-address').value;
+            const phone = document.getElementById('customer-phone').value;
+            const email = document.getElementById('customer-email').value;
+
+            if (name && address && phone && email) {
+                sendEmail(name, address, phone, email, cart);
+                successMessage.style.display = 'block';
+                checkoutForm.style.display = 'none';
+            }
+        });
+
+        function sendEmail(name, address, phone, email, cart) {
+            const emailContent = `
+                Customer Name: ${name}
+                Customer Address: ${address}
+                Customer Phone: ${phone}
+                Customer Email: ${email}
+                Order Details:
+                ${cart.map(item => `${item.name} - ${item.quantity} x $${item.price} = $${item.totalPrice.toFixed(2)}`).join('\n')}
+            `;
+            console.log('Email sent to info@vivasmartprinting.com with the following content:');
+            console.log(emailContent);
+        }
+    </script><br><br>
+	<p align="center"><a href="index - Copy.html"> Back To Home</a></p>
+</body>
+</html>

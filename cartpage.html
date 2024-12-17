@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Order Page</title>
+	
+    <link rel="stylesheet" href="cartstles.css">
+	
+
+</head>
+<body>
+	  
+    <div class="container">
+		<a href="#" id="branding">
+						<img src="dummy/logo.png" alt="viva">
+						<small class="site-description">Viva Printing Pack</small>
+					</a> <!-- #branding -->
+							  <h1><font color="#EC1D20"> Choose your Desired products from our Product list </font></h1>
+		====================================================================
+        <div id="productList"></div>
+		
+        <button id="viewCartButton" onclick="viewCart()">View Cart</button>
+
+        <!-- Cart Modal -->
+        <div id="cartModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCart()">&times;</span>
+                <h2>Your Cart Details</h2>
+                <div id="cartItems"></div>
+                <h3 id="cartTotal">Total: $0</h3>
+				
+		 <div class="container">
+        <h1>Please fill up the following information to check out</h1>
+        <form id="checkoutForm" action="process_chqout.php" method="POST">
+            <label for="name">Your Name: &nbsp; &nbsp;   </label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required><br><br>
+
+            <label for="phone">Phone Number:&nbsp; &nbsp; </label>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required><br><br>
+
+            <label for="email">your Email:&nbsp; &nbsp;     </label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required><br><br><br>
+
+            <label for="address">Address:&nbsp; &nbsp; </label>
+            <textarea id="address" name="address" placeholder="Enter your address" required></textarea><br><br>
+
+            <button type="button" onclick="validateAndSubmit()">Submit Order</button>
+        </form>
+    </div>
+               
+						
+            </div>
+			
+        </div>
+    </div>
+	 <script>
+        function validateAndSubmit() {
+            // Get form fields
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            // Check if all fields are filled
+            if (!name || !phone || !email || !address) {
+                alert("Please fill out all fields.");
+                return false;
+            }
+
+            // Check email validity
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            // If all validations pass, submit the form
+            document.getElementById('checkoutForm').submit();
+        }
+    </script>
+
+    <script src="cartscript.js"></script>
+</body>
+</html>

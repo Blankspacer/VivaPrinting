@@ -1,0 +1,1 @@
+{"version":"2.4","status":1,"statusmsg":"Ran adminbin Cpanel/ftp/LISTSTORE","mode":"simple","action":"fetch","timeout":0,"error":0,"exit_code":0,"data":[{"homedir":"/home2/vivasmar","type":"main","user":"vivasmar"},{"type":"logaccess","homedir":"/etc/apache2/logs/domlogs/vivasmar","user":"vivasmar_logs"}]}

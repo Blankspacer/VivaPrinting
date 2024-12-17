@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Order System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .product, .cart-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            text-align: center;
+            width: 200px;
+        }
+        .cart, .checkout {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Product Selection Page -->
+    <div id="product-selection">
+        <h1>Select Product</h1>
+        <div class="product" data-name="Product 1" data-image="https://via.placeholder.com/150">
+            <img src="https://via.placeholder.com/150" alt="Product 1">
+            <h3>Product 1</h3>
+            <button class="shop-now">Shop Now</button>
+        </div>
+    </div>
+
+    <!-- Product Customization Page -->
+    <div id="product-customization" class="hidden">
+        <h1>Customize Your Product</h1>
+        <div id="customize-details">
+            <img id="customize-image" src="" alt="Selected Product" style="width: 150px;">
+            <h3 id="customize-name"></h3>
+            <label>
+                Paper Size:
+                <select id="paper-size">
+                    <option value="A4-2">A4 ($2)</option>
+                    <option value="A5-1.5">A5 ($1.5)</option>
+                    <option value="A3-3">A3 ($3)</option>
+                </select>
+            </label>
+            <br>
+            <label>
+                Paper Type:
+                <select id="paper-type">
+                    <option value="Glossy-1">Glossy ($1)</option>
+                    <option value="Matte-2">Matte ($2)</option>
+                    <option value="Textured-3">Textured ($3)</option>
+                </select>
+            </label>
+            <br>
+            <label>
+                Number of Pages:
+                <select id="number-of-pages">
+                    <option value="50-0.5">50 pages ($0.5/unit)</option>
+                    <option value="100-1">100 pages ($1/unit)</option>
+                    <option value="200-1.5">200 pages ($1.5/unit)</option>
+                </select>
+            </label>
+            <br>
+            <label>
+                Add Cover Page:
+                <input type="checkbox" id="add-cover">
+            </label>
+            <br>
+            <button id="confirm-order">Confirm Order</button>
+        </div>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cart" class="hidden">
+        <h1>Cart</h1>
+        <div id="cart-items"></div>
+        <p><strong>Total: $<span id="cart-total">0</span></strong></p>
+        <button id="checkout">Checkout</button>
+    </div>
+
+    <!-- Checkout Page -->
+    <div id="checkout-page" class="hidden">
+        <h1>Checkout</h1>
+        <form id="checkout-form">
+            <label>Name: <input type="text" id="customer-name" required></label><br>
+            <label>Address: <input type="text" id="customer-address" required></label><br>
+            <label>Phone: <input type="text" id="customer-phone" required></label><br>
+            <label>Email: <input type="email" id="customer-email" required></label><br>
+            <button type="submit">Complete Checkout</button>
+        </form>
+    </div>
+
+    <script>
+        let cart = [];
+        let selectedProduct = {};
+
+        document.querySelectorAll('.shop-now').forEach(button => {
+            button.addEventListener('click', () => {
+                const product = button.parentElement;
+                selectedProduct = {
+                    name: product.getAttribute('data-name'),
+                    image: product.getAttribute('data-image'),
+                };
+
+                document.getElementById('customize-image').src = selectedProduct.image;
+                document.getElementById('customize-name').textContent = selectedProduct.name;
+
+                document.getElementById('product-selection').classList.add('hidden');
+                document.getElementById('product-customization').classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('confirm-order').addEventListener('click', () => {
+            const paperSize = document.getElementById('paper-size').value.split('-');
+            const paperType = document.getElementById('paper-type').value.split('-');
+            const numberOfPages = document.getElementById('number-of-pages').value.split('-');
+            const addCover = document.getElementById('add-cover').checked;
+
+            const itemPrice =
+                parseFloat(paperSize[1]) +
+                parseFloat(paperType[1]) +
+                parseFloat(numberOfPages[1]) +
+                (addCover ? 10 : 0);
+
+            const cartItem = {
+                name: selectedProduct.name,
+                image: selectedProduct.image,
+                price: itemPrice,
+            };
+
+            cart.push(cartItem);
+
+            document.getElementById('product-customization').classList.add('hidden');
+            document.getElementById('cart').classList.remove('hidden');
+            updateCart();
+        });
+
+        function updateCart() {
+            const cartItemsDiv = document.getElementById('cart-items');
+            cartItemsDiv.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.classList.add('cart-item');
+                div.innerHTML = `
+                    <img src="${item.image}" style="width: 50px;">
+                    <strong>${item.name}</strong> - $${item.price.toFixed(2)}
+                    <button onclick="removeItem(${index})">Remove</button>
+                `;
+                cartItemsDiv.appendChild(div);
+                total += item.price;
+            });
+
+            document.getElementById('cart-total').textContent = total.toFixed(2);
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        document.getElementById('checkout').addEventListener('click', () => {
+            document.getElementById('cart').classList.add('hidden');
+            document.getElementById('checkout-page').classList.remove('hidden');
+        });
+
+        document.getElementById('checkout-form').addEventListener('submit', e => {
+            e.preventDefault();
+
+            alert('Thanks for your order. We will get back to you soon.');
+            console.log('Order Details:', {
+                customerName: document.getElementById('customer-name').value,
+                customerAddress: document.getElementById('customer-address').value,
+                customerPhone: document.getElementById('customer-phone').value,
+                customerEmail: document.getElementById('customer-email').value,
+                cart: cart,
+            });
+        });
+    </script>
+</body>
+</html>

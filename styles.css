@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+.button {
+	position: absolute;
+	border-left: medium;
+	border-bottom: thick;
+	color: aqua;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.category {
+    margin-bottom: 20px;
+}
+
+.category h2 {
+    color: #007bff;
+}
+
+.subcategory {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.subcategory input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.total-price {
+    margin-left: 20px;
+    font-weight: bold;
+}
+@charset "utf-8";
+/* CSS Document */
+

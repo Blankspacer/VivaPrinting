@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viva Printing Pack - oders</title>
+    <style>
+        .hidden { display: none; }
+        .container { margin: 10px; }
+        img { max-width: 100px; }
+    </style>
+</head>
+<body>
+    <!-- Product Selection Page -->
+    <div id="product-selection" class="container">
+        <h1>Select Your Products </h1>
+        <div class="product" data-name=" Notebook" data-image="https://via.placeholder.com/150">
+            <img src="https://via.placeholder.com/150" alt="Custom Notebook">
+            <h3>Direct Mail</h3>
+            <button class="shop-now">Shop Now</button>
+        </div>
+		<br>
+		
+		
+		<div class="product" data-name="Custom Notebook" data-image="https://via.placeholder.com/150">
+            <img src="https://via.placeholder.com/150" alt="Custom Notebook">
+            <h3>Custom Notebook</h3>
+            <button class="shop-now">Shop Now</button>
+        </div>
+    </div>
+
+    <!-- Order Customization Page -->
+    <div id="order-customization" class="container hidden">
+        <h1>Customize Your Order</h1>
+        <div id="selected-product">
+            <img id="product-image" src="" alt="Selected Product">
+            <h3 id="product-name"></h3>
+        </div>
+        <label>Paper Quality:
+            <select id="paper-quality">
+                <option value="Glossy" data-price="0.10">Glossy ($0.10/unit)</option>
+                <option value="Matte" data-price="0.08">Matte ($0.08/unit)</option>
+                <option value="Recycled" data-price="0.12">Recycled ($0.12/unit)</option>
+                <option value="Card Stock" data-price="0.15">Card Stock ($0.15/unit)</option>
+                <option value="Coated" data-price="0.11">Coated ($0.11/unit)</option>
+                <option value="Uncoated" data-price="0.09">Uncoated ($0.09/unit)</option>
+            </select>
+        </label><br>
+        <label>Paper Size:
+            <select id="paper-size">
+                <option value="A4" data-price="0.20">A4 ($0.20/unit)</option>
+                <option value="A5" data-price="0.15">A5 ($0.15/unit)</option>
+                <option value="A3" data-price="0.30">A3 ($0.30/unit)</option>
+                <option value="Letter" data-price="0.25">Letter ($0.25/unit)</option>
+                <option value="Legal" data-price="0.35">Legal ($0.35/unit)</option>
+                <option value="Tabloid" data-price="0.40">Tabloid ($0.40/unit)</option>
+            </select>
+        </label><br>
+        <label>Number of Pages:
+            <select id="number-of-pages">
+                <option value="8">8</option>
+                <option value="16">16</option>
+                <option value="24">24</option>
+                <option value="32">32</option>
+                <option value="40">40</option>
+                <option value="48">48</option>
+            </select>
+        </label><br>
+        <label>Quantity:
+            <input type="number" id="quantity" min="500" value="500">
+        </label><br>
+        <label>Cover Page:
+            <select id="cover-page">
+                <option value="No">No</option>
+                <option value="Yes">Yes (+$10)</option>
+            </select>
+        </label><br>
+        <button id="add-to-cart">Add to Cart</button>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cart" class="container hidden">
+        <h1>Cart</h1>
+        <div id="cart-details"></div>
+        <button id="edit-order">Edit Order</button>
+        <button id="checkout-btn">Checkout</button>
+    </div>
+
+    <!-- Checkout Page -->
+    <div id="checkout" class="container hidden">
+        <h1>Checkout</h1>
+        <form id="checkout-form">
+            <label>Full Name: <input type="text" id="full-name" required></label><br>
+            <label>Phone Number: <input type="tel" id="phone" required></label><br>
+            <label>Email: <input type="email" id="email" required></label><br>
+            <label>Address: <textarea id="address" required></textarea></label><br>
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedProduct = {};
+        let orderDetails = {};
+
+        // Navigate to the Order Customization Page
+        document.querySelectorAll('.shop-now').forEach(button => {
+            button.addEventListener('click', function () {
+                const product = this.parentElement;
+                selectedProduct.name = product.getAttribute('data-name');
+                selectedProduct.image = product.getAttribute('data-image');
+
+                document.getElementById('product-name').textContent = selectedProduct.name;
+                document.getElementById('product-image').src = selectedProduct.image;
+
+                document.getElementById('product-selection').classList.add('hidden');
+                document.getElementById('order-customization').classList.remove('hidden');
+            });
+        });
+
+        // Add to Cart and Calculate Price
+        document.getElementById('add-to-cart').addEventListener('click', function () {
+            const paperQuality = document.getElementById('paper-quality');
+            const paperSize = document.getElementById('paper-size');
+            const numberOfPages = parseInt(document.getElementById('number-of-pages').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const coverPage = document.getElementById('cover-page').value;
+
+            if (quantity < 500) {
+                alert('Minimum quantity is 500.');
+                return;
+            }
+
+            const qualityPrice = parseFloat(paperQuality.selectedOptions[0].getAttribute('data-price'));
+            const sizePrice = parseFloat(paperSize.selectedOptions[0].getAttribute('data-price'));
+            const coverPrice = coverPage === 'Yes' ? 10 : 0;
+
+            const unitPrice = (qualityPrice + sizePrice) * numberOfPages + coverPrice;
+            const totalPrice = unitPrice * quantity;
+
+            orderDetails = {
+                ...selectedProduct,
+                paperQuality: paperQuality.value,
+                paperSize: paperSize.value,
+                numberOfPages,
+                quantity,
+                coverPage,
+                unitPrice,
+                totalPrice,
+            };
+
+            document.getElementById('order-customization').classList.add('hidden');
+            updateCart();
+        });
+
+        // Update Cart Page
+        function updateCart() {
+            const cartDetails = document.getElementById('cart-details');
+            cartDetails.innerHTML = `
+                <p><strong>Product:</strong> ${orderDetails.name}</p>
+                <img src="${orderDetails.image}" alt="${orderDetails.name}">
+                <p><strong>Paper Quality:</strong> ${orderDetails.paperQuality}</p>
+                <p><strong>Paper Size:</strong> ${orderDetails.paperSize}</p>
+                <p><strong>Number of Pages:</strong> ${orderDetails.numberOfPages}</p>
+                <p><strong>Quantity:</strong> ${orderDetails.quantity}</p>
+                <p><strong>Cover Page:</strong> ${orderDetails.coverPage}</p>
+                <p><strong>Total Price:</strong> $${orderDetails.totalPrice.toFixed(2)}</p>
+            `;
+
+            document.getElementById('cart').classList.remove('hidden');
+        }
+
+        // Edit Order
+        document.getElementById('edit-order').addEventListener('click', function () {
+            document.getElementById('cart').classList.add('hidden');
+            document.getElementById('order-customization').classList.remove('hidden');
+        });
+
+        // Navigate to Checkout
+        document.getElementById('checkout-btn').addEventListener('click', function () {
+            document.getElementById('cart').classList.add('hidden');
+            document.getElementById('checkout').classList.remove('hidden');
+        });
+
+        // Handle Checkout Form Submission
+        document.getElementById('checkout-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('full-name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+
+            if (!fullName || !phone || !email || !address) {
+                alert('All fields are mandatory.');
+                return;
+            }
+
+            const orderSummary = `
+                Name: ${fullName}
+                Phone: ${phone}
+                Email: ${email}
+                Address: ${address}
+                Product: ${orderDetails.name}
+                Paper Quality: ${orderDetails.paperQuality}
+                Paper Size: ${orderDetails.paperSize}
+                Number of Pages: ${orderDetails.numberOfPages}
+                Quantity: ${orderDetails.quantity}
+                Cover Page: ${orderDetails.coverPage}
+                Total Price: $${orderDetails.totalPrice.toFixed(2)}
+            `;
+
+            // Simulate Email Sending
+            console.log(`Email to info@vivasmartprinting.com:\n${orderSummary}`);
+
+            alert('Your order has been submitted successfully. Thanks for your order, we will get back to you soon.');
+            location.reload(); // Reset the app
+        });
+    </script>
+</body>
+</html>
